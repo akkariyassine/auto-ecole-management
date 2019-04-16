@@ -84,7 +84,7 @@ export class PayementPage {
           .getListCondidat()
           .then(data => {
             this.ListCondidat = data as Array<any>;
-            this.ListCondidat.filter(
+            this.ListCondidat=this.ListCondidat.filter(
               word => word.moniteur + "" == this.moniteurC
             );
             this.items = [];

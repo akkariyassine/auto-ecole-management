@@ -67,7 +67,7 @@ export class HomePage {
         $("#myCalendar").fullCalendar("renderEvents", this.events, true);
       } else {
         const result = this.events.filter(
-          word => word.condidat + "" == this.moniteurC
+          word => word.moniteur + "" == this.moniteurC
         );
 
         this.calendarOptions.events = result;

@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { NavController, NavParams } from "ionic-angular";
 import { GeneralProvider } from "../../providers/general/general";
 import { MoniteurProvider } from "../../providers/moniteur/moniteur";
@@ -19,11 +19,12 @@ import { LoginPage } from "../login/login";
   templateUrl: "comm-suivi.html"
 })
 export class CommSuiviPage {
+  @ViewChild("text") text: any;
+
   moniteurC;
   commList: any;
   items: Array<any> = [];
   ListCondidat: any[];
-  response: any;
   commentaires: Array<any>;
 
   constructor(
@@ -46,14 +47,12 @@ export class CommSuiviPage {
       .subscribe(data => {
         this.commList = data as Array<any>;
         this.commList.filter(word => word.moniteur + "" == this.moniteurC);
-        console.log(this.commList);
 
         this.condidat.getListCondidat().then(data => {
           this.ListCondidat = data as Array<any>;
-          this.ListCondidat.filter(
+          this.ListCondidat = this.ListCondidat.filter(
             word => word.moniteur + "" == this.moniteurC
           );
-          console.log(this.ListCondidat);
 
           this.items = [];
           for (let i of this.commList) {
@@ -69,11 +68,9 @@ export class CommSuiviPage {
               condidat: i.condidat,
               response: i.response
             };
-            console.log(object);
 
             this.items.push(object);
           }
-          console.log(this.items);
         });
       });
   }
@@ -86,17 +83,17 @@ export class CommSuiviPage {
   }
 
   validate(item) {
-    console.log(item);
+    console.log(this.text.value);
 
     let object = {
       start: item.start,
       end: item.end,
       moniteur: item.moniteur,
       condidat: item.condidat,
+
       commentaire: item.comment,
-      response: this.response
+      response: this.text.value
     };
-    console.log(object);
     this.general.getListCommantaires().then(data => {
       this.commentaires = data as Array<any>;
       console.log(this.commentaires);
@@ -109,7 +106,6 @@ export class CommSuiviPage {
 
       this.commentaires[this.getIndex(item)] = object;
       console.log(this.commentaires);
-
       firebase
         .database()
         .ref("/commentaires")
@@ -119,7 +115,11 @@ export class CommSuiviPage {
   getIndex(item) {
     let index = 0;
     for (let i of this.commentaires) {
-      if (i.start == item.start) {
+      if (
+        i.start == item.start &&
+        i.end == item.end &&
+        i.condidat == item.condidat
+      ) {
         return index;
       }
       index++;

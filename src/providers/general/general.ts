@@ -64,4 +64,21 @@ export class GeneralProvider {
         );
     });
   }
+
+  getListRemarques() {
+    return new Promise((resolve, reject) => {
+      firebase
+        .database()
+        .ref("/remarques")
+        .once("value")
+        .then(
+          (data: firebase.database.DataSnapshot) => {
+            resolve(data.val());
+          },
+          error => {
+            reject(error);
+          }
+        );
+    });
+  }
 }

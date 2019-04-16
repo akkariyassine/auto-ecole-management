@@ -56,6 +56,7 @@ export class AjouterHeurePage {
   // 2016-09-09T16:00:00
   validate() {
     let object = {
+      moniteur: this.moniteurC,
       condidat: this.gender,
       title:
         this.moniteurs[this.gender].nom +
